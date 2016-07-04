@@ -1,0 +1,46 @@
+.search-bar {
+  padding: 4px;
+  background-color: transparentize(#fff, 0.8);
+  border-radius: $common-radius;
+}
+
+.search-bar__terms {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-left: -0.5rem;
+
+  > li {
+    display: inline-block;
+    margin-left: 0.5rem;
+  }
+}
+
+.search-bar__term {
+  background-color: transparentize(#fff, 0.8);
+  border-radius: $common-radius;
+  line-height: 2.25rem;
+
+  // Spacing and overall feel
+  &__label,
+  &__remove {
+    padding: 5px 2px;
+  }
+
+  &__label {
+    padding-left: 10px;
+  }
+  &__remove {
+    cursor: pointer;
+    display: inline-block;
+    border: none;
+    color: transparentize(#fff, 0.4);
+    background-color: transparent;
+    padding-right: 10px;
+    font-size: 1.166666667rem; // This is equal to 14px. In rem is not very readable in this case, but it's worth it for the flexibility
+
+    &:hover {
+      background-color: transparentize(#fff, 0.8);
+    }
+  }
+}

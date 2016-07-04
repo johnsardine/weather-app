@@ -3,13 +3,16 @@ $root-font-size: 12px; // Most common font size in project
 $font-family-default: "Roboto", sans-serif;
 
 // Structure
-$container-maxwidth: 1060px;
-$container-narrow-maxwidth: 720px;
+$container-maxwidth: 88rem; // Design width was 1060, but to prevent decimals, I rounded to 88rem
+$container-narrow-maxwidth: 60rem;
 $container-gutter: 2rem;
 
 // Colors
-$text-color: #A1A8AF;
-$text-color-dark: #4C5766;
+$text-color: #a1a8af;
+$text-color-dark: #4c5766;
 
-$app-header-color: #fff;
+$app-header-color: #ebebeb;
 $app-header-background-color: #646e7b;
+
+// Elements
+$common-radius: .166666667rem; // 2px sometimes I'm torn between readability and flexibility
