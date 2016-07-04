@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/johnsardine/weather-app/issues"
   },
-  "homepage": "https://github.com/johnsardine/weather-app#readme"
+  "homepage": "https://github.com/johnsardine/weather-app#readme",
+  "dependencies": {
+    "angular": "^1.5.7",
+    "normalize.css": "^4.2.0"
+  }
 }
