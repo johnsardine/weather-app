@@ -1,0 +1,11 @@
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: $container-maxwidth;
+  padding-left: $container-gutter;
+  padding-right: $container-gutter;
+
+  &--narrow  {
+    max-width: $container-narrow-maxwidth;
+  }
+}

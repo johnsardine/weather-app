@@ -8,6 +8,16 @@ html {
   box-sizing: inherit;
 }
 
+/*
+ * Global style
+ */
+html {
+  font-family: $font-family-default;
+  font-size: $root-font-size;
+  -webkit-font-smoothing: antialiased;
+}
 body {
+  color: $text-color;
   background-color: #EBEFF1;
 }
+
