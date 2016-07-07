@@ -1,4 +1,5 @@
 .search-bar {
+  position: relative;
   padding: 4px;
   background-color: transparentize(#fff, 0.8);
   border-radius: $common-radius;
@@ -13,6 +14,14 @@
   > li {
     display: inline-block;
     margin-left: 0.5rem;
+  }
+
+  & {
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out;
+  }
+  &.is-visible {
+    opacity: 1;
   }
 }
 
@@ -38,9 +47,36 @@
     background-color: transparent;
     padding-right: 10px;
     font-size: 1.166666667rem; // This is equal to 14px. In rem is not very readable in this case, but it's worth it for the flexibility
+    position: relative;
+    z-index: 2;
 
     &:hover {
       background-color: transparentize(#fff, 0.8);
     }
+  }
+}
+
+.search-bar__query {
+  border: none;
+  padding: 0 10px;
+  background-color: transparent;
+  color: inherit;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  &:focus {
+    outline: unset;
+  }
+
+  & {
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out;
+  }
+  &.is-visible {
+    opacity: 1;
   }
 }

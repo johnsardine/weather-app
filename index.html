@@ -15,22 +15,43 @@
         <header class="app-header">
             <div class="container container--narrow">
 
-              <div class="search-bar">
-                <ul class="search-bar__terms">
-                  <li>
-                    <div class="search-bar__term">
-                      <span class="search-bar__term__label">Lisbon</span><button type="button" class="search-bar__term__remove" title="Remove">&times;</button>
-                    </div>
-                  </li><li>
-                    <div class="search-bar__term">
-                      <span class="search-bar__term__label">Paris</span><button type="button" class="search-bar__term__remove" title="Remove">&times;</button>
-                    </div>
-                  </li><li>
-                    <div class="search-bar__term">
-                      <span class="search-bar__term__label">Los Angeles</span><button type="button" class="search-bar__term__remove" title="Remove">&times;</button>
-                    </div>
-                  </li>
-                </ul>
+              <div class="search-bar" ng-controller="SearchBarController">
+
+                <form name="searchForm">
+
+                  <!-- Secondary element over input that will be hidden -->
+                  <ul class="search-bar__terms" ng-controller="SearchBarTermsController" ng-class="{ 'is-visible': shouldDisplayTerms }">
+                    <li ng-repeat="term in terms">
+                      <div class="search-bar__term">
+                        <span class="search-bar__term__label">{{term}}</span><button type="button" ng-click="removeQueryTerm(term)" class="search-bar__term__remove" title="Remove">&times;</button>
+                      </div>
+                    </li>
+                  </ul>
+
+                  <!-- Main element for positioning -->
+                  <input type="text" name="searchQuery" ng-model="query" ng-model-options="{ updateOn: 'blur' }" ng-keyup="didKeyUp($event)" ng-focus="didFocusQuery()" ng-blur="didBlurQuery()" class="search-bar__query" ng-class="{ 'is-visible': shouldDisplayQuery }" placeholder="Search for location…">
+
+                  <!-- Dropdown list -->
+                  <ul class="search-bar__suggestions" ng-controller="SearchBarSuggestionsController" ng-show="shouldDisplaySuggestions()">
+                    <li>
+                      Search for a city name…
+
+                      When entering the field, ajax fetch api city list, maybe limit it somehow.
+                      Upon search, find in already present list.
+                      If result is not found, query the api to find more results.
+                      If nothing found either way, display no falue.
+                      List will suggest based on last inserted term after comma.
+                      When an element is selected, move to terms view and hide dropdown
+                    </li>
+                    <li>
+                      <div class="search-bar__suggestion" ng-click="useSuggestion()">
+                        <span class="search-bar__suggestion__label">Lisbon</span>
+                      </div>
+                    </li>
+                  </ul>
+
+                </form>
+
               </div>
 
             </div>
@@ -38,6 +59,16 @@
 
         <main class="app-main">
             <div class="container">
+
+              <ul ng-controller="SearchResultsController" class="search-results">
+                <li ng-repeat="term in terms" class="search-results__row">
+
+                  <div class="island weather-block">
+                    {{term}}
+                  </div>
+                </li>
+              </ul>
+
             </div>
         </main>
 
