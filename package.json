@@ -6,7 +6,7 @@
   "scripts": {
     "test": "build-css",
     "build-css": "node-sass --include-path scss scss/main.scss css/main.css",
-    "watch-css": "node-sass -w scss/ -o css/"
+    "watch-css": "node-sass -w -r scss/ -o css/"
   },
   "repository": {
     "type": "git",
