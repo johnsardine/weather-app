@@ -2,11 +2,11 @@ var app = angular.module('weather-app', []);
 
 app.factory('SearchService', [function() {
 
-  var query_terms = [];
+  var queryTerms = [];
   var updateNotifications = [];
 
   function updateTerms(terms) {
-    query_terms = terms;
+    queryTerms = terms;
     notifyDidUpdateTerms(terms);
     return true;
   }
@@ -22,7 +22,7 @@ app.factory('SearchService', [function() {
   }
 
   function getTerms() {
-    return query_terms;
+    return queryTerms;
   }
 
   var SearchService = {
@@ -40,7 +40,7 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
   $scope.searchForm = null;
 
   $scope.query = 'Lisbon, Paris, Los Angeles'; // Default query value
-  $scope.query_terms = [];
+  $scope.queryTerms = [];
 
   var _splitByCharacter = ','; // Set split character
 
@@ -65,33 +65,33 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
   $scope.$watch(function() {
     return $scope.query;
   }, function() {
-    $scope.query_terms = extractQueryTerms($scope.query);
+    $scope.queryTerms = extractQueryTerms($scope.query);
   });
 
-  // Watch for query_terms changes and update service
+  // Watch for queryTerms changes and update service
   $scope.$watch(function() {
-    return $scope.query_terms;
+    return $scope.queryTerms;
   }, function() {
     $scope.updateService();
   });
 
   // Remove term from query
   $scope.removeQueryTerm = function(term) {
-    var termIndex = $scope.query_terms.indexOf(term);
+    var termIndex = $scope.queryTerms.indexOf(term);
     // Term does not exist, return false
     if ( termIndex < 0 ) {
       return false;
     }
     // Remove term
-    $scope.query_terms.splice(termIndex, 1);
-    $scope.query = builQueryFromTerms($scope.query_terms);
+    $scope.queryTerms.splice(termIndex, 1);
+    $scope.query = builQueryFromTerms($scope.queryTerms);
     return true;
   };
 
   // Notify service that terms were updated
   $scope.updateService = function() {
     console.log('updateService');
-    SearchService.updateTerms($scope.query_terms);
+    SearchService.updateTerms($scope.queryTerms);
   };
 
   // Detect certain special keys and handle accordingly
@@ -111,10 +111,10 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
 
   // Visibility conditions - watch runs on init, sets correct visibility
   $scope.$watch(function() {
-    return $scope.query_terms;
+    return $scope.queryTerms;
   }, function() {
-    $scope.shouldDisplayQuery = false || !$scope.query_terms.length;
-    $scope.shouldDisplayTerms = true && $scope.query_terms.length;
+    $scope.shouldDisplayQuery = false || !$scope.queryTerms.length;
+    $scope.shouldDisplayTerms = true && $scope.queryTerms.length;
   });
 
   $scope.didFocusQuery = function() {
@@ -122,8 +122,8 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
     $scope.shouldDisplayTerms = false;
   };
   $scope.didBlurQuery = function() {
-    $scope.shouldDisplayQuery = false || !$scope.query_terms.length;
-    $scope.shouldDisplayTerms = true && $scope.query_terms.length;
+    $scope.shouldDisplayQuery = false || !$scope.queryTerms.length;
+    $scope.shouldDisplayTerms = true && $scope.queryTerms.length;
   };
 }]);
 
