@@ -61,10 +61,10 @@
             <div class="container">
 
               <ul ng-controller="SearchResultsController" class="search-results">
-                <li ng-repeat="term in terms" class="search-results__row">
+                <li ng-repeat="row in weatherData" class="search-results__row">
 
-                  <div class="island weather-block">
-                    {{term}}
+                  <div class="island weather-block" ng-class="{ 'is-loading' : row.isLoading }">
+                    {{row}}
                   </div>
                 </li>
               </ul>

@@ -141,9 +141,10 @@ app.controller('SearchBarTermsController', ['$scope', 'SearchService', function(
 app.controller('SearchBarSuggestionsController', ['$scope', function($scope) {
 }]);
 
-app.controller('SearchResultsController', ['$scope', 'SearchService', function($scope, SearchService) {
+app.controller('SearchResultsController', ['$scope', '$timeout', 'SearchService', function($scope, $timeout, SearchService) {
 
   $scope.terms = [];
+  $scope.weatherData = [];
 
   var dataRowBase = {
     label: '',
@@ -155,6 +156,13 @@ app.controller('SearchResultsController', ['$scope', 'SearchService', function($
     $scope.terms = terms;
   });
 
+  // Detect terms change and fetch new data
+  $scope.$watch(function() {
+    return $scope.terms;
+  }, function() {
+    $scope.fetchWeatherData();
+  });
+
   function copyObject(obj) {
     return JSON.parse(JSON.stringify(obj));
   }
@@ -163,5 +171,26 @@ app.controller('SearchResultsController', ['$scope', 'SearchService', function($
     for (var attrname in obj2) { obj1[attrname] = obj2[attrname]; }
     return obj1;
   }
+
+  $scope.fetchWeatherData = function() {
+    var data = [];
+    var terms = $scope.terms;
+    for (var i = 0; i < terms.length; i++) {
+      var termName = terms[i];
+
+      var row = mergeObjects(copyObject(dataRowBase), {
+        label: termName
+      });
+
+      data.push(row);
+    }
+    $scope.weatherData = data;
+
+    $timeout(function() {
+      for (var i = 0; i < data.length; i++) {
+        data[i].isLoading = false;
+      }
+    }, 1500);
+  };
 
 }]);
