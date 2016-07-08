@@ -105,6 +105,7 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
     // Pressed ESC
     if (e.keyCode == 27) {
       $scope.searchForm.searchQuery.$rollbackViewValue();
+      e.target.blur();
     }
   };
 
