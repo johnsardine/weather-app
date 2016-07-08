@@ -145,6 +145,11 @@ app.controller('SearchResultsController', ['$scope', 'SearchService', function($
 
   $scope.terms = [];
 
+  var dataRowBase = {
+    label: '',
+    isLoading: true
+  };
+
   // Recieve terms updates
   SearchService.didUpdateTerms(function(terms) {
     $scope.terms = terms;
