@@ -3,6 +3,8 @@
   padding: 4px;
   background-color: transparentize(#fff, 0.8);
   border-radius: $common-radius;
+  // NOTE: When no terms exists, this height will heep layout
+  min-height: 45px; // TODO: Refactor with no min height
 }
 
 .search-bar__terms {
