@@ -109,15 +109,12 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
     }
   };
 
-  // Visibility conditions
-  $scope.shouldDisplayQuery = false;
-  $scope.shouldDisplayTerms = true;
-
+  // Visibility conditions - watch runs on init, sets correct visibility
   $scope.$watch(function() {
     return $scope.query_terms;
   }, function() {
-    $scope.shouldDisplayQuery = $scope.query_terms.length > 0 ? false : true;
-    $scope.shouldDisplayTerms = $scope.query_terms.length > 0 ? true : false;
+    $scope.shouldDisplayQuery = false || !$scope.query_terms.length;
+    $scope.shouldDisplayTerms = true && $scope.query_terms.length;
   });
 
   $scope.didFocusQuery = function() {
@@ -125,8 +122,8 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
     $scope.shouldDisplayTerms = false;
   };
   $scope.didBlurQuery = function() {
-    $scope.shouldDisplayQuery = false;
-    $scope.shouldDisplayTerms = true;
+    $scope.shouldDisplayQuery = false || !$scope.query_terms.length;
+    $scope.shouldDisplayTerms = true && $scope.query_terms.length;
   };
 }]);
 
