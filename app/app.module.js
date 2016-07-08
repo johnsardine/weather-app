@@ -155,4 +155,8 @@ app.controller('SearchResultsController', ['$scope', 'SearchService', function($
     $scope.terms = terms;
   });
 
+  function copyObject(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  }
+
 }]);
