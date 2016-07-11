@@ -175,7 +175,9 @@ app.controller('SearchResultsController', ['$scope', '$timeout', 'SearchService'
   }
 
   function mergeObjects(obj1, obj2) {
-    for (var attrname in obj2) { obj1[attrname] = obj2[attrname]; }
+    for (var key in obj2) {
+      obj1[key] = obj2[key];
+    }
     return obj1;
   }
 
