@@ -6,18 +6,26 @@ app.factory('SearchService', [function() {
   var updateNotifications = [];
 
   function updateTerms(terms) {
+    var newTermsAdded = getTermsDifference(queryTerms, terms); // Get new terms added
     queryTerms = terms;
-    notifyDidUpdateTerms(terms);
+    notifyDidUpdateTerms(terms, newTermsAdded);
     return true;
+  }
+
+  function getTermsDifference(originalCollection, newCollection) {
+    var diff = newCollection.filter(function(value) {
+      return originalCollection.indexOf(value) === -1;
+    });
+    return diff;
   }
 
   // Notify contexts that the terms were updated
   function didUpdateTerms(callback) {
     updateNotifications.push(callback);
   }
-  function notifyDidUpdateTerms(terms) {
+  function notifyDidUpdateTerms(terms, newTermsAdded) {
     for (var i = 0; i < updateNotifications.length; i++) {
-      updateNotifications[i](terms);
+      updateNotifications[i](terms, newTermsAdded);
     }
   }
 
@@ -131,7 +139,7 @@ app.controller('SearchBarTermsController', ['$scope', 'SearchService', function(
   $scope.terms = [];
 
   // Recieve terms updates
-  SearchService.didUpdateTerms(function(terms) {
+  SearchService.didUpdateTerms(function(terms, newTermsAdded) {
     $scope.terms = terms;
   });
 
