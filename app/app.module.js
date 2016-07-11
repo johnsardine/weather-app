@@ -3,7 +3,6 @@ var app = angular.module('weather-app', []);
 app.factory('SearchService', [function() {
 
   var queryTerms = [];
-  var updateNotifications = [];
 
   function updateTerms(terms) {
     var newTermsAdded = getTermsDifference(queryTerms, terms); // Get new terms added
@@ -20,12 +19,15 @@ app.factory('SearchService', [function() {
   }
 
   // Notify contexts that the terms were updated
+  var _didUpdateTermsCallback = [];
   function didUpdateTerms(callback) {
-    updateNotifications.push(callback);
+    _didUpdateTermsCallback.push(callback);
   }
   function notifyDidUpdateTerms(terms, newTermsAdded) {
-    for (var i = 0; i < updateNotifications.length; i++) {
-      updateNotifications[i](terms, newTermsAdded);
+    for (var i = 0; i < _didUpdateTermsCallback.length; i++) {
+      _didUpdateTermsCallback[i](terms, newTermsAdded);
+    }
+  }
     }
   }
 
