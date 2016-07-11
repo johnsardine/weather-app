@@ -23,13 +23,13 @@
                   <ul class="search-bar__terms" ng-controller="SearchBarTermsController" ng-class="{ 'is-visible': shouldDisplayTerms }">
                     <li ng-repeat="term in terms">
                       <div class="search-bar__term">
-                        <span class="search-bar__term__label">{{term}}</span><button type="button" ng-click="removeQueryTerm(term)" class="search-bar__term__remove" title="Remove">&times;</button>
+                        <span class="search-bar__term__label" ng-click="didClickTerm(term)">{{term}}</span><button type="button" ng-click="removeQueryTerm(term)" class="search-bar__term__remove" title="Remove">&times;</button>
                       </div>
                     </li>
                   </ul>
 
                   <!-- Main element for positioning -->
-                  <input type="text" name="searchQuery" ng-model="query" ng-model-options="{ updateOn: 'blur' }" ng-keyup="didKeyUp($event)" ng-focus="didFocusQuery()" ng-blur="didBlurQuery()" class="search-bar__query" ng-class="{ 'is-visible': shouldDisplayQuery }" placeholder="Search for location…">
+                  <input search-bar-query type="text" name="searchQuery" ng-model="query" ng-model-options="{ updateOn: 'blur' }" ng-keyup="didKeyUp($event)" ng-focus="didFocusQuery()" ng-blur="didBlurQuery()" class="search-bar__query" ng-class="{ 'is-visible': shouldDisplayQuery }" placeholder="Search for location…">
 
                   <!-- Dropdown list -->
                   <ul class="search-bar__suggestions" ng-controller="SearchBarSuggestionsController" ng-show="shouldDisplaySuggestions()">

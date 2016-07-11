@@ -28,6 +28,14 @@ app.factory('SearchService', [function() {
       _didUpdateTermsCallback[i](terms, newTermsAdded);
     }
   }
+
+  var _didTapTermToEditCallback = [];
+  function didTapTermToEdit(callback) {
+    _didTapTermToEditCallback.push(callback);
+  }
+  function notifyDidTapTermToEdit(term) {
+    for (var i = 0; i < _didTapTermToEditCallback.length; i++) {
+      _didTapTermToEditCallback[i](term);
     }
   }
 
@@ -38,7 +46,9 @@ app.factory('SearchService', [function() {
   var SearchService = {
     updateTerms: updateTerms,
     getTerms: getTerms,
-    didUpdateTerms: didUpdateTerms
+    didUpdateTerms: didUpdateTerms,
+    notifyDidTapTermToEdit: notifyDidTapTermToEdit,
+    didTapTermToEdit: didTapTermToEdit
   };
 
  return SearchService;
@@ -134,6 +144,11 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
     $scope.shouldDisplayQuery = false || !$scope.queryTerms.length;
     $scope.shouldDisplayTerms = true && $scope.queryTerms.length;
   };
+
+  // Edit clicked term
+  $scope.didClickTerm = function(term) {
+    SearchService.notifyDidTapTermToEdit(term);
+  };
 }]);
 
 app.controller('SearchBarTermsController', ['$scope', 'SearchService', function($scope, SearchService) {
@@ -204,4 +219,30 @@ app.controller('SearchResultsController', ['$scope', '$timeout', 'SearchService'
     }, 1500);
   };
 
+}]);
+
+app.directive('searchBarQuery', ['SearchService', function(SearchService) {
+
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs, controller) {
+
+      // When a term is clicked, focus on the query and select the touched term
+      SearchService.didTapTermToEdit(function(term) {
+        var queryText = element.val();
+        var inputDom = element[0];
+        var termIndex = queryText.indexOf(term);
+        var termLength = term.length;
+        var selectionStart = termIndex;
+        var selectionEnd = selectionStart + termLength;
+
+        // Focus on the input
+        inputDom.focus();
+
+        // Select the tapped term
+        inputDom.setSelectionRange(selectionStart, selectionEnd);
+
+      });
+    }
+  };
 }]);

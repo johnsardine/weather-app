@@ -36,6 +36,8 @@
   &__label,
   &__remove {
     padding: 5px 2px;
+    position: relative;
+    z-index: 2;
   }
 
   &__label {
@@ -49,8 +51,6 @@
     background-color: transparent;
     padding-right: 10px;
     font-size: 1.166666667rem; // This is equal to 14px. In rem is not very readable in this case, but it's worth it for the flexibility
-    position: relative;
-    z-index: 2;
 
     &:hover {
       background-color: transparentize(#fff, 0.8);
