@@ -54,7 +54,7 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
       return value.length;
     });
     return filteredTerms;
-  };
+  }
 
   // Build query from terms
   function builQueryFromTerms(terms) {
@@ -90,7 +90,6 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
 
   // Notify service that terms were updated
   $scope.updateService = function() {
-    console.log('updateService');
     SearchService.updateTerms($scope.queryTerms);
   };
 
