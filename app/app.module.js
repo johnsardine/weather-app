@@ -1,6 +1,9 @@
 var app = angular.module('weather-app', []);
 
-app.factory('SearchService', [function() {
+app.factory('SearchService', ['$http', function($http) {
+
+  var OWMAppId = '2a9faaa7ba7170d8184bf0786516667d';
+  var OWMWeatherEndpoint = 'http://api.openweathermap.org/data/2.5/weather?appid=' + OWMAppId;
 
   var queryTerms = [];
 
@@ -43,12 +46,21 @@ app.factory('SearchService', [function() {
     return queryTerms;
   }
 
+  function getWeatherDataByName(q) {
+    var endpointUrl = OWMWeatherEndpoint + '&q=' + q;
+    return $http({
+      method: 'GET',
+      url: endpointUrl
+    });
+  }
+
   var SearchService = {
     updateTerms: updateTerms,
     getTerms: getTerms,
     didUpdateTerms: didUpdateTerms,
     notifyDidTapTermToEdit: notifyDidTapTermToEdit,
-    didTapTermToEdit: didTapTermToEdit
+    didTapTermToEdit: didTapTermToEdit,
+    getWeatherDataByName: getWeatherDataByName
   };
 
  return SearchService;
@@ -192,7 +204,7 @@ app.controller('SearchResultsController', ['$scope', '$timeout', 'SearchService'
   }
 
   $scope.fetchWeatherData = function() {
-    var data = [];
+    $scope.weatherData = [];
     var terms = $scope.terms;
     for (var i = 0; i < terms.length; i++) {
       var termName = terms[i];
@@ -202,15 +214,20 @@ app.controller('SearchResultsController', ['$scope', '$timeout', 'SearchService'
         isLoading: true
       });
 
-      data.push(row);
+      $scope.weatherData.push(row);
     }
-    $scope.weatherData = data;
 
-    $timeout(function() {
-      for (var i = 0; i < data.length; i++) {
-        data[i].isLoading = false;
-      }
-    }, 1500);
+    // Fetch weather data for each location
+    angular.forEach($scope.weatherData, function(object) {
+      var request = SearchService.getWeatherDataByName(object.name);
+      request.then(function(response) {
+        // Success
+        angular.extend(object, response);
+        object.isLoading = false;
+      }, function(response) {
+        // Failed
+      });
+    });
   };
 
 }]);
