@@ -191,21 +191,15 @@ app.controller('SearchResultsController', ['$scope', '$timeout', 'SearchService'
     return JSON.parse(JSON.stringify(obj));
   }
 
-  function mergeObjects(obj1, obj2) {
-    for (var key in obj2) {
-      obj1[key] = obj2[key];
-    }
-    return obj1;
-  }
-
   $scope.fetchWeatherData = function() {
     var data = [];
     var terms = $scope.terms;
     for (var i = 0; i < terms.length; i++) {
       var termName = terms[i];
 
-      var row = mergeObjects(copyObject(dataRowBase), {
-        label: termName
+      var row = angular.extend(copyObject(dataRowBase), {
+        name: termName,
+        isLoading: true
       });
 
       data.push(row);
