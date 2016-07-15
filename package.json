@@ -20,6 +20,7 @@
   "homepage": "https://github.com/johnsardine/weather-app#readme",
   "dependencies": {
     "angular": "^1.5.7",
+    "angular-sanitize": "^1.5.7",
     "normalize.css": "^4.2.0"
   }
 }
