@@ -2,13 +2,22 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  text-align: center;
-  padding-top: 35px;
+  text-align: center; // Align blocks to center
+
+  @media (min-width: $media-breakpoint-lg) {
+    padding-top: 1rem;
+  }
 
   > li {
-    text-align: left;
     display: inline-block;
-    margin-left: 10px;
-    margin-right: 10px;
+    text-align: left; // Restore normal text align
+    padding-top: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: (100 / 2) * 1%;
+
+    @media (min-width: $media-breakpoint-lg) {
+      width: (100 / 3) * 1%;
+    }
   }
 }
