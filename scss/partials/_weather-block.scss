@@ -1,0 +1,56 @@
+.weather-block {
+  overflow: hidden; // Simple clear method
+
+  // Block structure
+  &__header,
+  &__main,
+  &__footer {
+    float: left;
+    width: (100 / 3) * 1%;
+    padding-top: 6px; // Set spacing top
+  }
+  &__main {
+    text-align: center;
+  }
+  &__footer {
+    text-align: right;
+  }
+
+  &__city,
+  &__date,
+  &__temperature,
+  &__description,
+  &__meta {
+    margin: 0;
+  //  line-height: .875rem;
+  }
+  &__city {
+    line-height: 1rem;
+  }
+  &__date,
+  &__description,
+  &__meta {
+    line-height: .875rem;
+  }
+  &__city,
+  &__temperature {
+    color: $text-color-dark;
+    font-size: 1rem;
+  }
+  &__city {
+    font-weight: 500;
+  }
+  &__temperature {
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 1em;
+    margin-top: -.375rem; // Remove spacing top because temperature is the exception here in terms of size
+
+    sup {
+      font-size: .625rem;
+      font-family: 'Arial', sans-serif;
+      font-weight: normal;
+      vertical-align: super;
+    }
+  }
+}
