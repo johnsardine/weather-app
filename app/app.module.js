@@ -223,7 +223,7 @@ app.controller('SearchResultsController', ['$scope', '$timeout', 'SearchService'
       var request = SearchService.getWeatherDataByName(object.name);
       request.then(function(response) {
         // Success
-        angular.extend(object, response);
+        angular.extend(object, response.data);
         object.isLoading = false;
       }, function(response) {
         // Failed
