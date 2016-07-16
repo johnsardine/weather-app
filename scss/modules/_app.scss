@@ -6,5 +6,9 @@
   color: $app-header-color;
   background-color: $app-header-background-color;
   padding: 10px;
-  margin-bottom: 35px;
+  margin-bottom: 1rem;
+
+  @media (min-width: $media-breakpoint-sm) {
+    margin-bottom: 2rem;
+  }
 }
