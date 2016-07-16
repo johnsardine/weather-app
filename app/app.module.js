@@ -127,6 +127,22 @@ app.filter('wbDate', ['$filter', function($filter) {
   };
 }]);
 
+app.filter('wbTemperature', [function() {
+  return function(owmObject) {
+    owmObject = owmObject || {};
+
+    var temperature;
+    // Make sure object is set correctly and temperature exists
+    if ( typeof owmObject.main === 'undefined' ) {
+      temperature = 0;
+    } else {
+      temperature = Math.round(owmObject.main.temp);
+    }
+
+    return temperature + '<sup>°C</sup>';
+  };
+}]);
+
 app.controller('SearchBarController', ['$scope', 'SearchService', function($scope, SearchService) {
 
   // Init form variable
