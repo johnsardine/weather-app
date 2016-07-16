@@ -1,4 +1,4 @@
-var app = angular.module('weather-app', []);
+var app = angular.module('weather-app', ['ngSanitize']);
 
 app.factory('SearchService', ['$http', function($http) {
 
