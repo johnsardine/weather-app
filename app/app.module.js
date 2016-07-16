@@ -211,7 +211,8 @@ app.controller('SearchResultsController', ['$scope', '$timeout', 'SearchService'
 
       var row = angular.extend(copyObject(dataRowBase), {
         name: termName,
-        isLoading: true
+        isLoading: true,
+        date: Date.now(),
       });
 
       $scope.weatherData.push(row);
