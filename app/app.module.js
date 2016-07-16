@@ -143,6 +143,21 @@ app.filter('wbTemperature', [function() {
   };
 }]);
 
+app.filter('wbDescription', ['$filter', function($filter) {
+  return function(owmObject) {
+    owmObject = owmObject || {};
+
+    var description = '&nbsp;';
+    // Make sure object is set correctly and temperature exists
+    if ( typeof owmObject.weather === 'object' ) {
+      var firstWeatherCondition = owmObject.weather[0];
+      description = $filter('titlecase')(firstWeatherCondition.description);
+    }
+
+    return description;
+  };
+}]);
+
 app.controller('SearchBarController', ['$scope', 'SearchService', function($scope, SearchService) {
 
   // Init form variable
