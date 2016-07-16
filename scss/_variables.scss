@@ -1,10 +1,10 @@
 // Typography
-$root-font-size: 12px; // Most common font size in project
+$root-font-size: 16px; // Most common font size in project
 $font-family-default: "Roboto", sans-serif;
 
 // Structure
-$container-maxwidth: 88rem; // Design width was 1060, but to prevent decimals, I rounded to 88rem
-$container-narrow-maxwidth: 60rem;
+$container-maxwidth: 66.25rem; // Design width was 1060, but to prevent decimals, I rounded to 88rem
+$container-narrow-maxwidth: 45rem;
 $container-gutter: 2rem;
 
 // Colors
