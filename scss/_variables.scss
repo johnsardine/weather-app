@@ -14,5 +14,9 @@ $text-color-dark: #4c5766;
 $app-header-color: #ebebeb;
 $app-header-background-color: #646e7b;
 
+// Breakpoints
+$media-breakpoint-sm: 25rem;
+$media-breakpoint-lg: 45rem;
+
 // Elements
 $common-radius: .166666667rem; // 2px sometimes I'm torn between readability and flexibility
