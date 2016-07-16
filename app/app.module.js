@@ -3,7 +3,8 @@ var app = angular.module('weather-app', []);
 app.factory('SearchService', ['$http', function($http) {
 
   var OWMAppId = '2a9faaa7ba7170d8184bf0786516667d';
-  var OWMWeatherEndpoint = 'http://api.openweathermap.org/data/2.5/weather?appid=' + OWMAppId;
+  var OWMUnits = 'metric';
+  var OWMWeatherEndpoint = 'http://api.openweathermap.org/data/2.5/weather?appid=' + OWMAppId + '&units=' + OWMUnits;
 
   var queryTerms = [];
 
