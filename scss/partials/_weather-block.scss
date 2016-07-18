@@ -22,20 +22,27 @@
   &__description,
   &__meta {
     margin: 0;
-  //  line-height: .875rem;
   }
   &__city {
     line-height: 1rem;
   }
   &__date,
-  &__description,
   &__meta {
+    line-height: 1rem;
+  }
+  &__description {
     line-height: .875rem;
   }
   &__city,
   &__temperature {
     color: $text-color-dark;
     font-size: 1rem;
+  }
+  &__city,
+  &__description {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   &__city {
     font-weight: 500;
@@ -46,11 +53,18 @@
     line-height: 1em;
     margin-top: -.375rem; // Remove spacing top because temperature is the exception here in terms of size
 
+    span {
+      position: relative;
+    }
+
     sup {
       font-size: .625rem;
       font-family: 'Arial', sans-serif;
       font-weight: normal;
-      vertical-align: super;
+
+      position: absolute;
+      top: 1em;
+      left: 100%;
     }
   }
 }
