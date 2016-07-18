@@ -14,7 +14,11 @@
     padding-top: 20px;
     padding-left: 10px;
     padding-right: 10px;
-    width: (100 / 2) * 1%;
+    width: 100 * 1%;
+
+    @media (min-width: $media-breakpoint-sm) {
+      width: (100 / 2) * 1%;
+    }
 
     @media (min-width: $media-breakpoint-lg) {
       width: (100 / 3) * 1%;
