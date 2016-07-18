@@ -144,7 +144,7 @@ app.filter('wbTemperature', ['$interpolate', function($interpolate) {
   };
 }]);
 
-app.filter('wbDescription', ['$filter', function($filter) {
+app.filter('wbDescription', ['$filter', '$interpolate', function($filter, $interpolate) {
   return function(owmObject) {
     owmObject = owmObject || {};
 
@@ -152,7 +152,8 @@ app.filter('wbDescription', ['$filter', function($filter) {
     // Make sure object is set correctly and temperature exists
     if ( typeof owmObject.weather === 'object' ) {
       var firstWeatherCondition = owmObject.weather[0];
-      description = $filter('titlecase')(firstWeatherCondition.description);
+      var rawDescription = $filter('titlecase')(firstWeatherCondition.description);
+      description = $interpolate('<span title="{{description}}">{{description}}</span>')({ description: rawDescription });
     }
 
     return description;
