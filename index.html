@@ -65,7 +65,7 @@
 
                   <article class="island weather-block" ng-class="{ 'is-loading' : row.isLoading }">
                     <header class="weather-block__header">
-                      <h1 class="weather-block__city">{{row.name}}</h1>
+                      <h1 class="weather-block__city" ng-bind-html="row | wbName"></h1>
                       <p class="weather-block__date"><time datetime="{{row | wbDate:true}}">{{row | wbDate}}</time></p>
                     </header>
                     <main class="weather-block__main">
