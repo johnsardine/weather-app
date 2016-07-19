@@ -109,6 +109,21 @@ app.factory('SearchService', ['$http', '$q', function($http, $q) {
     });
   }
 
+  var _suggestionCanceler = $q.defer();
+  var _suggestionRequest;
+  function fetchSuggestionsFor(q) {
+    var endpointUrl = OWMNameSuggestionEndpoint + '?limit=3&q=' + q;
+
+    _suggestionCanceler.resolve();
+    _suggestionCanceler = $q.defer();
+
+    return $http({
+      method: 'GET',
+      url: endpointUrl,
+      timeout: _suggestionCanceler.promise
+    });
+  }
+
   var _storedWeatherData = {};
   function setStoredWeatherDataByName(q, data) {
     _storedWeatherData[q] = data;
@@ -127,7 +142,8 @@ app.factory('SearchService', ['$http', '$q', function($http, $q) {
     didUpdateTerms: didUpdateTerms,
     notifyDidTapTermToEdit: notifyDidTapTermToEdit,
     didTapTermToEdit: didTapTermToEdit,
-    getWeatherDataByName: getWeatherDataByName
+    getWeatherDataByName: getWeatherDataByName,
+    fetchSuggestionsFor: fetchSuggestionsFor
   };
 
  return SearchService;
@@ -243,7 +259,7 @@ app.filter('wbWindSpeed', ['$filter', function($filter) {
   };
 }]);
 
-app.controller('SearchBarController', ['$scope', 'SearchService', function($scope, SearchService) {
+app.controller('SearchBarController', ['$scope', '$timeout', 'SearchService', function($scope, $timeout, SearchService) {
 
   // Init form variable
   $scope.searchForm = null;
@@ -325,6 +341,21 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
     localStorage.setItem('query', $scope.query);
   };
 
+  $scope.getLastTypedTerm = function() {
+    var terms = extractQueryTerms($scope.query);
+    return ( typeof terms[terms.length - 1] === 'string' ) ? terms[terms.length - 1] : '';
+  };
+
+  $scope.isAcceptingSuggestion = false;
+  $scope.acceptSuggestion = function(term) {
+    $scope.isAcceptingSuggestion = true;
+    var lastTypedTerm = $scope.getLastTypedTerm();
+    var query = $scope.query;
+    var queryTerms = extractQueryTerms($scope.query);
+    queryTerms[queryTerms.length - 1] = term;
+    $scope.query = builQueryFromTerms(queryTerms);
+  };
+
   // Detect certain special keys and handle accordingly
   $scope.didKeyUp = function(e) {
 
@@ -341,6 +372,7 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
   };
 
   // Visibility conditions - watch runs on init, sets correct visibility
+  $scope.shouldDisplaySuggestions = false;
   $scope.$watch(function() {
     return $scope.queryTerms;
   }, function() {
@@ -351,10 +383,16 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
   $scope.didFocusQuery = function() {
     $scope.shouldDisplayQuery = true;
     $scope.shouldDisplayTerms = false;
+    $scope.shouldDisplaySuggestions = true;
   };
-  $scope.didBlurQuery = function() {
-    $scope.shouldDisplayQuery = false || !$scope.queryTerms.length;
-    $scope.shouldDisplayTerms = true && $scope.queryTerms.length;
+  $scope.didBlurQuery = function(e) {
+    $timeout(function() {
+      $scope.shouldDisplayQuery = false || !$scope.queryTerms.length;
+      $scope.shouldDisplayTerms = true && $scope.queryTerms.length;
+      $scope.shouldDisplaySuggestions = false;
+      $scope.didChangeQueryText();
+      $scope.isAcceptingSuggestion = false;
+    }, 250);
   };
 
   // Edit clicked term
@@ -374,7 +412,45 @@ app.controller('SearchBarTermsController', ['$scope', 'SearchService', function(
 
 }]);
 
-app.controller('SearchBarSuggestionsController', ['$scope', function($scope) {
+app.controller('SearchBarSuggestionsController', ['$scope', 'SearchService', function($scope, SearchService) {
+
+  $scope.suggestions = [];
+  $scope.lastTypedTerm = '';
+  $scope.isLoading = false;
+  $scope.isInitial = true;
+
+  $scope.$watch(function() {
+    return $scope.query;
+  }, function() {
+    if ( $scope.shouldDisplaySuggestions ) {
+      $scope.isInitial = false;
+      $scope.lastTypedTerm = $scope.getLastTypedTerm();
+    }
+  });
+
+  $scope.$watch(function() {
+    return $scope.shouldDisplaySuggestions;
+  }, function() {
+    if ( !$scope.shouldDisplaySuggestions ) {
+      $scope.suggestions = []; // Delete suggestions on suggestions close
+      $scope.isInitial = true;
+    }
+  });
+
+  $scope.$watch(function() {
+    return $scope.lastTypedTerm;
+  }, function() {
+    if ( $scope.lastTypedTerm.length > 0 && !$scope.isAcceptingSuggestion ) {
+      $scope.isLoading = true;
+      var suggestionsResponse = SearchService.fetchSuggestionsFor($scope.lastTypedTerm).then(function(response) {
+        if ( $scope.shouldDisplaySuggestions ) {
+          $scope.suggestions = response.data;
+          $scope.isLoading = false;
+        }
+      });
+    }
+  });
+
 }]);
 
 app.controller('SearchResultsController', ['$scope', '$timeout', 'SearchService', function($scope, $timeout, SearchService) {

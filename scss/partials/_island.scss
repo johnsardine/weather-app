@@ -1,4 +1,4 @@
-.island {
+@mixin island() {
   padding: 10px;
   background-color: #fff;
   border-radius: 2px;
@@ -10,4 +10,8 @@
   &.is-loading {
     opacity: 0.5;
   }
+}
+
+.island {
+  @include island();
 }

@@ -15,7 +15,7 @@
         <header class="app-header">
             <div class="container container--narrow">
 
-              <div class="search-bar" ng-controller="SearchBarController">
+              <div class="search-bar" ng-controller="SearchBarController" ng-class="{ 'has-suggestions': shouldDisplaySuggestions }">
 
                 <form name="searchForm">
 
@@ -29,23 +29,28 @@
                   </ul>
 
                   <!-- Main element for positioning -->
-                  <input search-bar-query type="text" name="searchQuery" ng-model="query" ng-change="didChangeQueryText()" ng-model-options="{ updateOn: 'blur' }" ng-keyup="didKeyUp($event)" ng-focus="didFocusQuery()" ng-blur="didBlurQuery()" class="search-bar__query" ng-class="{ 'is-visible': shouldDisplayQuery }" placeholder="Search for location…">
+                  <input search-bar-query type="text" name="searchQuery" ng-model="query" ng-keyup="didKeyUp($event)" ng-focus="didFocusQuery()" ng-blur="didBlurQuery($event)" class="search-bar__query" ng-class="{ 'is-visible': shouldDisplayQuery }" placeholder="Search for location…" autocomplete="off">
 
                   <!-- Dropdown list -->
-                  <ul class="search-bar__suggestions" ng-controller="SearchBarSuggestionsController" ng-show="shouldDisplaySuggestions()">
-                    <li>
-                      Search for a city name…
-
-                      When entering the field, ajax fetch api city list, maybe limit it somehow.
-                      Upon search, find in already present list.
-                      If result is not found, query the api to find more results.
-                      If nothing found either way, display no falue.
-                      List will suggest based on last inserted term after comma.
-                      When an element is selected, move to terms view and hide dropdown
+                  <ul class="search-bar__suggestions" ng-controller="SearchBarSuggestionsController" ng-show="shouldDisplaySuggestions">
+                    <li ng-repeat="suggestion in suggestions" ng-if="!isLoading">
+                      <div class="search-bar__suggestion" ng-click="acceptSuggestion(suggestion)">
+                        <span class="search-bar__suggestion__label">{{suggestion}}</span>
+                      </div>
                     </li>
-                    <li>
-                      <div class="search-bar__suggestion" ng-click="useSuggestion()">
-                        <span class="search-bar__suggestion__label">Lisbon</span>
+                    <li class="animate-repeat" ng-if="!isLoading && !isInitial && suggestions.length == 0">
+                      <div class="search-bar__suggestion">
+                        <span class="search-bar__suggestion__label">No suggestions found</span>
+                      </div>
+                    </li>
+                    <li class="animate-repeat" ng-if="!isLoading && isInitial">
+                      <div class="search-bar__suggestion">
+                        <span class="search-bar__suggestion__label">Type the name of a location</span>
+                      </div>
+                    </li>
+                    <li class="animate-repeat" ng-if="isLoading">
+                      <div class="search-bar__suggestion">
+                        <span class="search-bar__suggestion__label">Searching…</span>
                       </div>
                     </li>
                   </ul>

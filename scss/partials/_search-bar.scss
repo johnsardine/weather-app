@@ -5,6 +5,11 @@
   border-radius: $common-radius;
   // NOTE: When no terms exists, this height will heep layout
   min-height: 45px; // TODO: Refactor with no min height
+
+  &.has-suggestions {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 }
 
 .search-bar__terms {
@@ -80,5 +85,33 @@
   }
   &.is-visible {
     opacity: 1;
+  }
+}
+
+
+// Suggestions
+.search-bar__suggestions {
+  @include island();
+  margin: 0;
+  list-style: none;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 1;
+
+  color: $text-color;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+
+  > li {
+    padding: 5px;
+    border-radius: $common-radius;
+
+    &:hover {
+      background-color: rgba(0,0,0,0.1);
+      color: #444;
+    }
   }
 }
