@@ -21,6 +21,7 @@
   "dependencies": {
     "angular": "^1.5.7",
     "angular-sanitize": "^1.5.7",
+    "node-sass": "^3.8.0",
     "normalize.css": "^4.2.0"
   }
 }
