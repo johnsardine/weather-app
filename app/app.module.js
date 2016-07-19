@@ -266,6 +266,7 @@ app.controller('SearchBarController', ['$scope', '$timeout', 'SearchService', fu
 
   var storedQueryVariable = localStorage.getItem('query');
   $scope.query = (storedQueryVariable) ? storedQueryVariable : 'Lisbon, Paris, Los Angeles'; // Default query value
+  $scope.temporaryQuery = $scope.query;
   $scope.queryTerms = [];
 
   var _splitByCharacter = ','; // Set split character
@@ -338,6 +339,7 @@ app.controller('SearchBarController', ['$scope', '$timeout', 'SearchService', fu
 
   $scope.didChangeQueryText = function() {
     $scope.loadResutsFromQuery();
+    $scope.temporaryQuery = $scope.query;
     localStorage.setItem('query', $scope.query);
   };
 
@@ -366,7 +368,9 @@ app.controller('SearchBarController', ['$scope', '$timeout', 'SearchService', fu
 
     // Pressed ESC
     if (e.keyCode == 27) {
-      $scope.searchForm.searchQuery.$rollbackViewValue();
+      // Deprecated after suggestions were introduced
+      //$scope.searchForm.searchQuery.$rollbackViewValue();
+      $scope.query = $scope.temporaryQuery;
       e.target.blur();
     }
   };
