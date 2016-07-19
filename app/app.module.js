@@ -36,11 +36,12 @@ app.filter('titlecase', function() {
     };
 });
 
-app.factory('SearchService', ['$http', function($http) {
+app.factory('SearchService', ['$http', '$q', function($http, $q) {
 
   var OWMAppId = '2a9faaa7ba7170d8184bf0786516667d';
   var OWMUnits = 'metric';
   var OWMWeatherEndpoint = 'http://api.openweathermap.org/data/2.5/weather?appid=' + OWMAppId + '&units=' + OWMUnits;
+  var OWMNameSuggestionEndpoint = 'http://sdn.pt/github/weather-app/';
 
   var queryTerms = [];
 
@@ -84,11 +85,40 @@ app.factory('SearchService', ['$http', function($http) {
   }
 
   function getWeatherDataByName(q) {
+
+    var existingStoredData = getStoredWeatherDataByName(q);
+
+    if ( typeof existingStoredData === 'object' ) {
+      return $q(function(resolve, reject) {
+        resolve(existingStoredData);
+      });
+    }
+
     var endpointUrl = OWMWeatherEndpoint + '&q=' + q;
-    return $http({
+    var httpPromise = $http({
       method: 'GET',
       url: endpointUrl
     });
+    // Returns $q to unify the method when stored
+    return $q(function(resolve, reject) {
+      httpPromise.then(function(response) {
+        var data = response.data;
+        setStoredWeatherDataByName(q, data);
+        resolve(data);
+      }, reject);
+    });
+  }
+
+  var _storedWeatherData = {};
+  function setStoredWeatherDataByName(q, data) {
+    _storedWeatherData[q] = data;
+    return true;
+  }
+  function getStoredWeatherDataByName(q) {
+    if ( typeof _storedWeatherData[q] === 'object' ) {
+      return _storedWeatherData[q];
+    }
+    return;
   }
 
   var SearchService = {
@@ -218,7 +248,8 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
   // Init form variable
   $scope.searchForm = null;
 
-  $scope.query = 'Lisbon, Paris, Los Angeles'; // Default query value
+  var storedQueryVariable = localStorage.getItem('query');
+  $scope.query = (storedQueryVariable) ? storedQueryVariable : 'Lisbon, Paris, Los Angeles'; // Default query value
   $scope.queryTerms = [];
 
   var _splitByCharacter = ','; // Set split character
@@ -237,20 +268,29 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
 
   // Build query from terms
   function builQueryFromTerms(terms) {
-    return terms.join(', ');
+    var queryString = terms.join(', ');
+    return queryString.length ? queryString + ', ' : queryString;
   }
 
   // Watch for query changes and extract query terms
-  $scope.$watch(function() {
+  /*$scope.$watch(function() {
     return $scope.query;
   }, function() {
     $scope.queryTerms = extractQueryTerms($scope.query);
-  });
+  });*/
+
+  $scope.loadResutsFromQuery = function() {
+    $scope.queryTerms = extractQueryTerms($scope.query);
+  };
+
+  // Run once from stored default query
+  $scope.loadResutsFromQuery(); // Not sure about this way of triggering a first load
 
   // Watch for queryTerms changes and update service
   $scope.$watch(function() {
     return $scope.queryTerms;
   }, function() {
+    $scope.updateQueryString();
     $scope.updateService();
   });
 
@@ -264,12 +304,25 @@ app.controller('SearchBarController', ['$scope', 'SearchService', function($scop
     // Remove term
     $scope.queryTerms.splice(termIndex, 1);
     $scope.query = builQueryFromTerms($scope.queryTerms);
+    $scope.didChangeQueryText();
     return true;
   };
 
   // Notify service that terms were updated
   $scope.updateService = function() {
     SearchService.updateTerms($scope.queryTerms);
+  };
+
+  $scope.updateQueryString = function() {
+    var originalQuery = $scope.query;
+    if ( originalQuery.length > 0 && !originalQuery.endsWith(', ') ) {
+      $scope.query = originalQuery + ', ';
+    }
+  };
+
+  $scope.didChangeQueryText = function() {
+    $scope.loadResutsFromQuery();
+    localStorage.setItem('query', $scope.query);
   };
 
   // Detect certain special keys and handle accordingly
@@ -368,9 +421,9 @@ app.controller('SearchResultsController', ['$scope', '$timeout', 'SearchService'
     // Fetch weather data for each location
     angular.forEach($scope.weatherData, function(object) {
       var request = SearchService.getWeatherDataByName(object.name);
-      request.then(function(response) {
+      request.then(function(data) {
         // Success
-        angular.extend(object, response.data);
+        angular.extend(object, data);
         object.isLoading = false;
       }, function(response) {
         // Failed

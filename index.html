@@ -29,7 +29,7 @@
                   </ul>
 
                   <!-- Main element for positioning -->
-                  <input search-bar-query type="text" name="searchQuery" ng-model="query" ng-model-options="{ updateOn: 'blur' }" ng-keyup="didKeyUp($event)" ng-focus="didFocusQuery()" ng-blur="didBlurQuery()" class="search-bar__query" ng-class="{ 'is-visible': shouldDisplayQuery }" placeholder="Search for location…">
+                  <input search-bar-query type="text" name="searchQuery" ng-model="query" ng-change="didChangeQueryText()" ng-model-options="{ updateOn: 'blur' }" ng-keyup="didKeyUp($event)" ng-focus="didFocusQuery()" ng-blur="didBlurQuery()" class="search-bar__query" ng-class="{ 'is-visible': shouldDisplayQuery }" placeholder="Search for location…">
 
                   <!-- Dropdown list -->
                   <ul class="search-bar__suggestions" ng-controller="SearchBarSuggestionsController" ng-show="shouldDisplaySuggestions()">
