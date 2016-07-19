@@ -96,7 +96,7 @@ app.factory('SearchService', ['$http', '$q', function($http, $q) {
 
     var endpointUrl = OWMWeatherEndpoint + '&q=' + q;
     var httpPromise = $http({
-      method: 'POST',
+      method: 'GET',
       url: endpointUrl
     });
     // Returns $q to unify the method when stored
@@ -118,7 +118,7 @@ app.factory('SearchService', ['$http', '$q', function($http, $q) {
     _suggestionCanceler = $q.defer();
 
     return $http({
-      method: 'POST',
+      method: 'GET',
       url: endpointUrl,
       timeout: _suggestionCanceler.promise
     });
