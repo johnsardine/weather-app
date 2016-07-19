@@ -41,7 +41,7 @@ app.factory('SearchService', ['$http', '$q', function($http, $q) {
   var OWMAppId = '2a9faaa7ba7170d8184bf0786516667d';
   var OWMUnits = 'metric';
   var OWMWeatherEndpoint = 'http://api.openweathermap.org/data/2.5/weather?appid=' + OWMAppId + '&units=' + OWMUnits;
-  var OWMNameSuggestionEndpoint = 'http://sdn.pt/github/weather-app/';
+  var OWMNameSuggestionEndpoint = 'http://sdn.pt/github/weather-app/search.php';
 
   var queryTerms = [];
 
