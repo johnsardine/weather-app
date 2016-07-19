@@ -1,6 +1,10 @@
 # Weather App
 Simple weather app to explore Angular JS and localstorage
 
+## Run locally
+
+run `npm install`
+
 ## Build css
 
 **Compile once**
